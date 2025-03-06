@@ -1,0 +1,167 @@
+---
+title: "팔머 펭귄 종별 특징 분석_팀 발표"
+format: html
+jupyter: python3
+---
+
+# 데이터 코드 
+
+### 1. 펭귄 데이터 불러오기 및 정보 확인
+```{python}
+import numpy as np
+import pandas as pd
+from palmerpenguins import load_penguins
+penguins = load_penguins()
+penguins.info
+```
+
+- 설명
+    - Adelie, Chinstrap, Gentoo 총 3개의 펭귄 종이 존재
+    - island : 서식지
+    - bill_length_mm : 부리 길이
+    - bill_depth_mm : 부리 깊이
+    - flipper_length_mm : 날개 길이
+    - body_mass_g : 몸무게
+    - sex : 성별
+    - year : 조사 년도
+
+<br>
+<br>
+
+### 2. 펭귄 종 성별별 평균
+
+```{python}
+Adelie_M = penguins[(penguins["species"] == "Adelie")&(penguins["sex"] == "male")]
+Adelie_FM = penguins[(penguins["species"] == "Adelie")&(penguins["sex"] == "female")]
+Chinstrap_M = penguins[(penguins["species"] == "Chinstrap")&(penguins["sex"] == "male")]
+Chinstrap_FM = penguins[(penguins["species"] == "Chinstrap")&(penguins["sex"] == "female")]
+Gentoo_M = penguins[(penguins["species"] == "Gentoo")&(penguins["sex"] == "male")]
+Gentoo_FM = penguins[(penguins["species"] == "Gentoo")&(penguins["sex"] == "female")]
+
+gender_species = pd.DataFrame({
+})
+gender_species["Adelie_FM"] = Adelie_FM.describe().iloc[1]
+gender_species["Adelie_M"] = Adelie_M.describe().iloc[1]
+gender_species["Chinstrap_FM"] = Chinstrap_FM.describe().iloc[1]
+gender_species["Chinstrap_M"] = Chinstrap_M.describe().iloc[1]
+gender_species["Gentoo_FM"] = Gentoo_FM.describe().iloc[1]
+gender_species["Gentoo_M"] = Gentoo_M.describe().iloc[1]
+gender_species
+```
+
+- 설명
+    - 
+
+<br>
+<br>
+
+### 3. 종 성별별 조사 개체수
+
+```{python}
+penguins = penguins.dropna()
+
+check_adelie_male = penguins[(penguins['sex'] =='male') & (penguins['species'] =='Adelie')]
+check_adelie_female= penguins[(penguins['sex'] =='female') & (penguins['species'] =='Adelie')]
+
+check_adelie_male=check_adelie_male.count()["sex"]
+check_adelie_female=check_adelie_female.count()["sex"]
+
+check_chinstrap_male= penguins[(penguins['sex'] =='male') & (penguins['species'] =='Chinstrap')]
+check_chinstrap_female= penguins[(penguins['sex'] =='female') & (penguins['species'] =='Chinstrap')]
+
+check_chinstrap_male=check_chinstrap_male.count()["sex"]
+check_chinstrap_female=check_chinstrap_female.count()["sex"]
+
+check_Gentoo_male= penguins[(penguins['sex'] =='male') & (penguins['species'] =='Gentoo')]
+check_Gentoo_female= penguins[(penguins['sex'] =='female') & (penguins['species'] =='Gentoo')]
+
+
+check_Gentoo_male=check_Gentoo_male.count()["sex"]
+check_Gentoo_female=check_Gentoo_female.count()["sex"]
+
+sex=np.array([check_adelie_female,check_adelie_male,check_chinstrap_female,check_chinstrap_male,check_Gentoo_female,check_Gentoo_male])
+sex = pd.DataFrame(sex)
+
+sex = sex.T
+
+sex.columns = ['Adelie_FM','Adelie_M','Chinstrap_FM','Chinstrap_M','Gentoo_FM','Gentoo_M']
+total = pd.concat([gender_species,sex],axis=0)
+total.index= ['bill_length_mm','bill_depth_mm','flipper_length_mm','body_mass_g','year','number']
+
+total
+```
+
+- 설명
+    - 
+
+<br>
+<br>
+
+### 4. 종별 주 서식지
+
+```{python}
+# 결측치 제거거
+na_peng = penguins.dropna()
+
+# 아델 주 서식지
+A = na_peng['species'] == 'Adelie'
+Adel = na_peng.loc[A,:]
+Ai = Adel['island']
+adel_island = pd.Series(Ai.value_counts(), name='Adelie')
+ ## island
+ ## Dream        55
+ ## Torgersen    47
+ ## Biscoe       44
+ ## Name: count, dtype: int64
+
+# Chinstrap
+C = na_peng['species'] == 'Chinstrap'
+Chin = na_peng.loc[C,:]
+Ci = Chin['island']
+Chin_island = pd.Series(Ci.value_counts(), name='Chinstrap')
+ ## island
+ ## Dream    68
+ ## Name: count, dtype: int64
+
+# Gentoo
+G = na_peng['species'] == 'Gentoo'
+Gen = na_peng.loc[G,:]
+Gi = Gen['island']
+Gen_island = pd.Series(Gi.value_counts(), name='Gentoo')
+
+ ## island
+ ## Biscoe    119
+ ## Name: count, dtype: int64
+
+# 종별 서식지 최종
+peng_island = pd.DataFrame({
+})
+peng_island = pd.concat([adel_island, Chin_island, Gen_island], axis=1)
+
+peng_island
+```
+
+- 설명
+    - 
+
+<br>
+<br>
+
+## 
+
+# 결과 분석 
+분석내용
+
+##
+
+# 더 필요한 정보
+
+- describe() : 데이터 프레임의 요약 통계
+- 결측치에 대한 정보 
+
+##
+
+# 코드 간결화
+
+- 반복문 사용하여 코드 효율적으로 정리
+
